@@ -2,13 +2,13 @@
 
 from datetime import datetime, timezone
 
-from backend.config import (
+from config import (
     EMOTION_HIGH_RISK_WEIGHT,
     EMOTION_LOW_RISK_WEIGHT,
     EMOTION_MEDIUM_RISK_WEIGHT,
     EMOTION_WEIGHT,
 )
-from backend.database.mongo import get_db
+from database.mongo import get_db
 
 
 def _start_of_day_utc() -> datetime:

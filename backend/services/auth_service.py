@@ -4,10 +4,10 @@ from datetime import datetime
 
 from fastapi import Depends, HTTPException, status
 
-from backend.database.mongo import create_user, get_user_by_email, get_user_by_id
-from backend.models.user import UserCreate, UserPublic
-from backend.utils.jwt_handler import create_access_token, decode_access_token, get_bearer_token
-from backend.utils.password_hash import hash_password, verify_password
+from database.mongo import create_user, get_user_by_email, get_user_by_id
+from models.user import UserCreate, UserPublic
+from utils.jwt_handler import create_access_token, decode_access_token, get_bearer_token
+from utils.password_hash import hash_password, verify_password
 
 
 def _to_public_user(user_record: dict) -> UserPublic:

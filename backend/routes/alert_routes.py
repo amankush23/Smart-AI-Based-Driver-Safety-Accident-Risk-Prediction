@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from backend.database.mongo import get_alerts
+from database.mongo import get_alerts
 
 router = APIRouter(tags=["alerts"])
 

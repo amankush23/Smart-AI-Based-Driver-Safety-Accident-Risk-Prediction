@@ -29,9 +29,9 @@ except Exception:
     timm = None
     transforms = None
 
-from backend.config import FOG_MODEL_PATH, FOG_MODEL_CLASSES
-from backend.database.mongo import log_alert, log_fog_prediction
-from backend.utils.logger import get_logger
+from config import FOG_MODEL_PATH, FOG_MODEL_CLASSES
+from database.mongo import log_alert, log_fog_prediction
+from utils.logger import get_logger
 
 logger = get_logger("fog_service")
 

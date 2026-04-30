@@ -9,8 +9,8 @@ from typing import Any
 import cv2
 import numpy as np
 
-from backend.database.mongo import log_alert
-from backend.utils.logger import get_logger
+from database.mongo import log_alert
+from utils.logger import get_logger
 
 logger = get_logger("visibility_service")
 

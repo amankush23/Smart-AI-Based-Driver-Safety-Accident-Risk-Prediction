@@ -7,10 +7,10 @@ import time
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
-from backend.services import drowsiness_service, fog_service, stress_service, visibility_service, kid_safety_service
-from backend.services.risk_engine import compute_unified_risk
-from backend.config import WEBSOCKET_PUSH_INTERVAL, FOG_POLL_INTERVAL, KID_SAFETY_POLL_INTERVAL
-from backend.utils.logger import get_logger
+from services import drowsiness_service, fog_service, stress_service, visibility_service, kid_safety_service
+from services.risk_engine import compute_unified_risk
+from config import WEBSOCKET_PUSH_INTERVAL, FOG_POLL_INTERVAL, KID_SAFETY_POLL_INTERVAL
+from utils.logger import get_logger
 
 logger = get_logger("routes.ws")
 router = APIRouter()

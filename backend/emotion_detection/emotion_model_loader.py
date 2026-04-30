@@ -12,8 +12,8 @@ from typing import Any
 import joblib
 import numpy as np
 
-from backend.config import EMOTION_CLASS_NAMES_PATH, EMOTION_LABEL_ENCODER_PATH, EMOTION_MODEL_PATH
-from backend.utils.logger import get_logger
+from config import EMOTION_CLASS_NAMES_PATH, EMOTION_LABEL_ENCODER_PATH, EMOTION_MODEL_PATH
+from utils.logger import get_logger
 
 logger = get_logger("emotion.model_loader")
 

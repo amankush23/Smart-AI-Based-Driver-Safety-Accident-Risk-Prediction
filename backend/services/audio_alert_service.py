@@ -10,7 +10,7 @@ import time
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from backend.utils.logger import get_logger
+from utils.logger import get_logger
 
 logger = get_logger("audio_alert_service")
 

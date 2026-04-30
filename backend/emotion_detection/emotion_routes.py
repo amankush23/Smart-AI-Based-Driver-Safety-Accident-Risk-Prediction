@@ -7,8 +7,8 @@ from typing import Optional
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from pydantic import BaseModel
 
-from backend.database.mongo import get_latest_emotion_event
-from backend.emotion_detection.emotion_predictor import (
+from database.mongo import get_latest_emotion_event
+from emotion_detection.emotion_predictor import (
     decode_base64_frame,
     decode_upload_bytes,
     predict_from_frame,

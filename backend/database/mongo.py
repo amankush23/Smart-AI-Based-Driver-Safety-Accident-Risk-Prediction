@@ -18,8 +18,8 @@ except ImportError:
     Collection = Any
     Database = Any
 
-from backend.config import MONGO_URI, MONGO_DB_NAME
-from backend.utils.logger import get_logger
+from config import MONGO_URI, MONGO_DB_NAME
+from utils.logger import get_logger
 
 logger = get_logger("database.mongo")
 

@@ -1,3 +1,3 @@
 """Compatibility wrapper for Mongo helpers."""
 
-from backend.database.mongo import *
+from database.mongo import *

@@ -17,10 +17,10 @@ from app.services.drowsiness_service import start as start_drowsiness_service, s
 from app.services.fog_service import load_model as load_fog_model
 from app.services.kid_service import load_model as load_kid_model
 from app.utils.logger import get_logger
-from backend.routes.auth import router as auth_router
-from backend.routes.api import router as api_router
-from backend.routes.analytics_routes import router as analytics_router
-from backend.routes.ws import router as ws_router
+from routes.auth import router as auth_router
+from routes.api import router as api_router
+from routes.analytics_routes import router as analytics_router
+from routes.ws import router as ws_router
 
 logger = get_logger("app")
 

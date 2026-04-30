@@ -7,7 +7,7 @@ import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from backend.config import JWT_ALGORITHM, JWT_EXP_MINUTES, JWT_SECRET_KEY
+from config import JWT_ALGORITHM, JWT_EXP_MINUTES, JWT_SECRET_KEY
 
 security = HTTPBearer()
 

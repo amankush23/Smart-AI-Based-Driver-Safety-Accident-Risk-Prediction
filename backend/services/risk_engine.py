@@ -15,7 +15,7 @@ Weighting:
     40% fog        (environmental hazard)
 """
 
-from backend.config import (
+from config import (
     CHILD_WEIGHT,
     DROWSINESS_WEIGHT,
     FOG_WEIGHT,
@@ -24,7 +24,7 @@ from backend.config import (
     VISIBILITY_WEIGHT,
 )
 from typing import Optional
-from backend.utils.logger import get_logger
+from utils.logger import get_logger
 
 logger = get_logger("risk_engine")
 

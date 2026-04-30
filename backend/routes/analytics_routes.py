@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from backend.services.analytics_service import generate_summary
+from services.analytics_service import generate_summary
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
 

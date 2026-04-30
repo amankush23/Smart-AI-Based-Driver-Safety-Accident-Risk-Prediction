@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from backend.config import (
+from config import (
     OTP_EXPIRY_MINUTES,
     SMTP_FROM,
     SMTP_HOST,
@@ -20,12 +20,12 @@ from backend.config import (
     SMTP_PORT,
     SMTP_USER,
 )
-from backend.database.mongo import (
+from database.mongo import (
     create_otp_request,
     delete_otp_request,
     get_otp_request,
 )
-from backend.utils.logger import get_logger
+from utils.logger import get_logger
 
 logger = get_logger("services.otp")
 

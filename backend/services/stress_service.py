@@ -12,9 +12,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-from backend.database.mongo import log_alert
-from backend.services.audio_alert_service import trigger_alert
-from backend.utils.logger import get_logger
+from database.mongo import log_alert
+from services.audio_alert_service import trigger_alert
+from utils.logger import get_logger
 
 logger = get_logger("stress_service")
 

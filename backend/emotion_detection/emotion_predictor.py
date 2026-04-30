@@ -13,10 +13,10 @@ from typing import Any
 import cv2
 import numpy as np
 
-from backend.config import EMOTION_INPUT_SIZE
-from backend.database.mongo import log_alert, log_emotion_event
-from backend.emotion_detection.emotion_model_loader import EmotionAssets, EmotionModelLoader
-from backend.utils.logger import get_logger
+from config import EMOTION_INPUT_SIZE
+from database.mongo import log_alert, log_emotion_event
+from emotion_detection.emotion_model_loader import EmotionAssets, EmotionModelLoader
+from utils.logger import get_logger
 
 logger = get_logger("emotion.predictor")
 

@@ -12,9 +12,9 @@ from typing import Any, Optional
 import cv2
 import numpy as np
 
-from backend.config import MODELS_DIR
-from backend.database.mongo import log_alert
-from backend.utils.logger import get_logger
+from config import MODELS_DIR
+from database.mongo import log_alert
+from utils.logger import get_logger
 
 logger = get_logger("kid_safety_service")
 

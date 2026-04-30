@@ -2,7 +2,7 @@
 
 import logging
 
-from backend.config import LOG_LEVEL
+from config import LOG_LEVEL
 
 
 def get_logger(name: str) -> logging.Logger:

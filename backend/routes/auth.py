@@ -3,12 +3,12 @@
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, Field
 
-from backend.database.mongo import get_user_by_email, update_user_password
-from backend.models.types import EmailAddress
-from backend.models.user import TokenResponse, UserCreate, UserLogin
-from backend.services.auth_service import login_user, register_user
-from backend.services.otp_service import consume_otp, request_otp, verify_otp
-from backend.utils.password_hash import hash_password
+from database.mongo import get_user_by_email, update_user_password
+from models.types import EmailAddress
+from models.user import TokenResponse, UserCreate, UserLogin
+from services.auth_service import login_user, register_user
+from services.otp_service import consume_otp, request_otp, verify_otp
+from utils.password_hash import hash_password
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 

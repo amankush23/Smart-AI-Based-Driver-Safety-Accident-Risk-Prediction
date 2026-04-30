@@ -12,8 +12,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from backend.config import MODELS_DIR
-from backend.utils.logger import get_logger
+from config import MODELS_DIR
+from utils.logger import get_logger
 
 logger = get_logger("accident_service")
 

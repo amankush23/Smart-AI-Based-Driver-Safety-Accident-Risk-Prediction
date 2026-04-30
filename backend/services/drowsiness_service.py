@@ -15,7 +15,7 @@ from urllib.request import urlopen
 
 import numpy as np
 
-from backend.config import (
+from config import (
     BOX_SMOOTH_ALPHA,
     EYE_AR_CONSEC_FRAMES,
     EYE_AR_THRESH,
@@ -32,9 +32,9 @@ from backend.config import (
     YAWN_THRESH,
     YAWN_CONSEC_FRAMES,
 )
-from backend.database.mongo import log_alert, log_drowsiness_event
-from backend.services.audio_alert_service import start_alert_loop, stop_alert
-from backend.utils.logger import get_logger
+from database.mongo import log_alert, log_drowsiness_event
+from services.audio_alert_service import start_alert_loop, stop_alert
+from utils.logger import get_logger
 
 logger = get_logger("drowsiness_service")
 
