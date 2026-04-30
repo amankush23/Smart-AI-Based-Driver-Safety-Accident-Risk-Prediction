@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import time
 from collections import deque
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
-import cv2
-import numpy as np
+if TYPE_CHECKING:
+    import numpy as np
 
 from database.mongo import log_alert
 from utils.logger import get_logger
@@ -25,7 +25,7 @@ VIS_SCORES = {0: 8.0, 1: 55.0, 2: 75.0, 3: 45.0}
 
 _last_visibility_alert_ts = 0.0
 _last_child_alert_ts = 0.0
-_prev_gray: np.ndarray | None = None
+_prev_gray: Any = None
 _motion_buf: deque[int] = deque(maxlen=30)
 
 STATE = {
@@ -57,7 +57,10 @@ def set_engine(on: bool) -> dict[str, Any]:
     return get_state()
 
 
-def _decode_frame(image_bytes: bytes) -> np.ndarray | None:
+def _decode_frame(image_bytes: bytes) -> Any | None:
+    import numpy as np
+    import cv2
+
     arr = np.frombuffer(image_bytes, dtype=np.uint8)
     if arr.size == 0:
         return None
@@ -65,7 +68,10 @@ def _decode_frame(image_bytes: bytes) -> np.ndarray | None:
     return frame
 
 
-def _analyze_visibility(frame: np.ndarray) -> dict[str, Any]:
+def _analyze_visibility(frame: Any) -> dict[str, Any]:
+    import cv2
+    import numpy as np
+
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     brightness = float(np.mean(gray))
     contrast = float(np.std(gray))
@@ -90,7 +96,9 @@ def _analyze_visibility(frame: np.ndarray) -> dict[str, Any]:
     }
 
 
-def _detect_child_presence(frame: np.ndarray) -> dict[str, Any]:
+def _detect_child_presence(frame: Any) -> dict[str, Any]:
+    import cv2
+    import numpy as np
     global _prev_gray
 
     gray = cv2.GaussianBlur(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), (21, 21), 0)

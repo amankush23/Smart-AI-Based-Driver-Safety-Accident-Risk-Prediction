@@ -31,8 +31,14 @@ logger = get_logger("app")
 async def lifespan(app: FastAPI):
 	init_mongo()
 	if not TEST_MODE:
-		load_fog_model()
-		load_kid_model()
+		# By default do NOT eagerly load heavy ML models on startup (avoids OOM on small instances).
+		# Set FORCE_LOAD_MODELS=true in the environment to override and load at startup.
+		if os.environ.get("FORCE_LOAD_MODELS", "false").lower() == "true":
+			load_fog_model()
+			load_kid_model()
+		else:
+			logger.info("Deferred loading of fog and kid-safety models; they will load on first request.")
+
 		if ENABLE_DROWSINESS_SERVICE:
 			start_drowsiness_service()
 		else:

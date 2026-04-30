@@ -1,5 +1,6 @@
 """Kid safety detection service using OpenCV DNN age estimation."""
 
+
 from __future__ import annotations
 
 import os
@@ -7,10 +8,11 @@ import threading
 import time
 import urllib.request
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, TYPE_CHECKING
 
-import cv2
-import numpy as np
+# Avoid importing heavy packages (cv2, numpy) at module import time to keep memory low on startup.
+if TYPE_CHECKING:
+    import numpy as np
 
 from config import MODELS_DIR
 from database.mongo import log_alert
@@ -99,6 +101,8 @@ def ensure_model_files(base_dir: Path) -> None:
 
 
 def load_nets(base_dir: Path):
+    import cv2
+
     face_net = cv2.dnn.readNet(
         str(base_dir / FACE_MODEL),
         str(base_dir / FACE_PROTO),
@@ -138,6 +142,9 @@ def _ensure_models() -> bool:
 
 
 def _decode_frame(image_bytes: bytes) -> np.ndarray | None:
+    import numpy as np
+    import cv2
+
     arr = np.frombuffer(image_bytes, dtype=np.uint8)
     if arr.size == 0:
         return None
@@ -145,6 +152,8 @@ def _decode_frame(image_bytes: bytes) -> np.ndarray | None:
 
 
 def detect_faces(frame: np.ndarray, face_net) -> list[tuple[int, int, int, int, float]]:
+    import cv2
+
     h, w = frame.shape[:2]
     blob = cv2.dnn.blobFromImage(
         frame,
@@ -172,6 +181,9 @@ def detect_faces(frame: np.ndarray, face_net) -> list[tuple[int, int, int, int, 
 
 
 def classify_age(face_img: np.ndarray, age_net) -> str:
+    import cv2
+    import numpy as np
+
     blob = cv2.dnn.blobFromImage(
         face_img,
         scalefactor=1.0,

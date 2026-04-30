@@ -16,18 +16,8 @@ from typing import Optional
 import io
 import time
 
-try:
-    from PIL import Image, ImageStat, ImageFilter
-    import torch
-    import timm
-    from torchvision import transforms
-except Exception:
-    Image = None
-    ImageStat = None
-    ImageFilter = None
-    torch = None
-    timm = None
-    transforms = None
+# Keep lightweight imaging imports at top-level; defer heavy ML frameworks.
+from PIL import Image, ImageStat, ImageFilter
 
 from config import FOG_MODEL_PATH, FOG_MODEL_CLASSES
 from database.mongo import log_alert, log_fog_prediction
@@ -35,18 +25,39 @@ from utils.logger import get_logger
 
 logger = get_logger("fog_service")
 
-# ── Model (loaded once) ─────────────────────────────────────────────
-_device = torch.device("cpu") if torch is not None else None
+# ── Lazy-loaded model state ─────────────────────────────────────────
+_device = None
 _model = None
-_transform = (
-    transforms.Compose([
-        transforms.Resize((224, 224)),
-        transforms.ToTensor(),
-        transforms.Normalize([0.5], [0.5]),
-    ])
-    if transforms is not None
-    else None
-)
+_transform = None
+
+
+def _get_transform():
+    global _transform
+    if _transform is None:
+        # import inside to avoid torchvision loading at import time
+        from torchvision import transforms
+
+        _transform = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize([0.5], [0.5]),
+        ])
+    return _transform
+
+
+def _ensure_frameworks():
+    """Import heavy ML frameworks on demand and set device."""
+    global _device
+    try:
+        import torch
+        import timm
+    except Exception as exc:
+        logger.error("Failed to import torch/timm: %s", exc)
+        return None, None
+
+    if _device is None:
+        _device = torch.device("cpu")
+    return torch, timm
 
 # ── Track last prediction for state queries ──────────────────────────
 _last_state: dict = {"active": False}
@@ -56,20 +67,21 @@ _last_fog_alert_ts = 0.0
 def load_model():
     """Load the fog detection model into memory. Call once at startup."""
     global _model
-    if torch is None or timm is None or _transform is None:
+    frameworks = _ensure_frameworks()
+    if frameworks is None or frameworks[0] is None:
         logger.error("Fog service dependencies are missing")
         _model = None
         return
 
+    torch, timm = frameworks
+    transform = _get_transform()
     try:
-        _model = timm.create_model(
-            "efficientnet_b0", pretrained=False, num_classes=FOG_MODEL_CLASSES
-        )
+        _model = timm.create_model("efficientnet_b0", pretrained=False, num_classes=FOG_MODEL_CLASSES)
         _model.load_state_dict(torch.load(FOG_MODEL_PATH, map_location=_device))
         _model.eval()
-        logger.info(f"Fog detection model loaded from {FOG_MODEL_PATH}")
+        logger.info("Fog detection model loaded from %s", FOG_MODEL_PATH)
     except Exception as e:
-        logger.error(f"Failed to load fog model: {e}")
+        logger.error("Failed to load fog model: %s", e)
         _model = None
 
 
@@ -156,17 +168,22 @@ def predict(image_bytes: bytes, user_id: str = "system", image_name: str = "came
     """
     global _last_state
 
+    # If model is not loaded, fall back to heuristic predictor
     if _model is None:
         _last_state = _fallback_visibility_from_image(image_bytes)
         return _last_state
 
     try:
-        if Image is None or torch is None or _transform is None:
+        # import frameworks locally to avoid import-time memory usage
+        import torch
+
+        transform = _get_transform()
+        if Image is None or transform is None:
             _last_state = {"active": False, "error": "ML dependencies unavailable"}
             return _last_state
 
         image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-        img_tensor = _transform(image).unsqueeze(0)
+        img_tensor = transform(image).unsqueeze(0)
 
         with torch.no_grad():
             output = _model(img_tensor)
@@ -199,7 +216,7 @@ def predict(image_bytes: bytes, user_id: str = "system", image_name: str = "came
         return _last_state
 
     except Exception as e:
-        logger.error(f"Fog prediction error: {e}")
+        logger.error("Fog prediction error: %s", e)
         _last_state = {"active": False, "error": str(e)}
         return _last_state
 

@@ -10,7 +10,8 @@ from threading import Lock
 from typing import Any
 
 import joblib
-import numpy as np
+
+# Defer importing heavy numerical/ML libs (numpy, tensorflow) until they're actually needed.
 
 from config import EMOTION_CLASS_NAMES_PATH, EMOTION_LABEL_ENCODER_PATH, EMOTION_MODEL_PATH
 from utils.logger import get_logger
@@ -41,12 +42,16 @@ class _FallbackEmotionModel:
 
     @staticmethod
     def _softmax(scores: np.ndarray) -> np.ndarray:
+        import numpy as np
+
         shifted = scores - np.max(scores)
         exp_scores = np.exp(shifted)
         return exp_scores / np.sum(exp_scores)
 
     def predict(self, batch: np.ndarray, verbose: int = 0) -> np.ndarray:
         del verbose
+
+        import numpy as np
 
         frame = np.asarray(batch, dtype=np.float32)
         if frame.ndim != 4 or frame.shape[0] == 0:
