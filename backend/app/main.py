@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
@@ -9,6 +10,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
+import uvicorn
 
 from app.api.routes import drowsiness_router, kid_safety_router, stress_router, visibility_router
 from app.core.config import CORS_ORIGINS, DROWSINESS_SERVICE_DISABLED_REASON, ENABLE_DROWSINESS_SERVICE, HOST, PORT, TEST_MODE
@@ -51,6 +53,8 @@ app = FastAPI(
 	lifespan=lifespan,
 )
 
+port = int(os.environ.get("PORT", 10000))
+
 app.add_middleware(
 	CORSMiddleware,
 	allow_origins=CORS_ORIGINS,
@@ -81,6 +85,11 @@ def health_check() -> dict:
 	return {"status": "ok", "service": "driver-safety-api"}
 
 
+@app.get("/api/status")
+def status() -> dict:
+	return {"status": "ok"}
+
+
 app.include_router(drowsiness_router)
 app.include_router(stress_router)
 app.include_router(kid_safety_router)
@@ -97,6 +106,4 @@ def root() -> dict:
 
 
 if __name__ == "__main__":
-	import uvicorn
-
-	uvicorn.run("app.main:app", host=HOST, port=PORT, reload=True)
+	uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
